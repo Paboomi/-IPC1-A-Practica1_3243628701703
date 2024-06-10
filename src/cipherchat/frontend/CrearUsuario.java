@@ -18,22 +18,39 @@ public class CrearUsuario extends JFrame implements ActionListener {
     private JTextField ageField;
     private JTextField phoneNumberField;
     private JCheckBox cbPassword;
+    private JButton btnRegresar;
     private JComboBox<String> genderComboBox;
     private Font fuenteGenerica = new Font("Hack", Font.BOLD, 16);
     private Color color = new Color(245, 240, 255);
+    private String PATH_IMAGES = "trycipher/Images";
     private GenerarCodigo genCode;
     private ListaUsuarios usuarios;
+    private Login login;
 
     private JButton registerButton;
 
-    public CrearUsuario(GenerarCodigo genCode, ListaUsuarios usuarios) {
+    public CrearUsuario(GenerarCodigo genCode, ListaUsuarios usuarios, Login login) {
         this.genCode = genCode;
         this.usuarios = usuarios;
+        this.login = login;
         initComponents();
 
     }
 
     private void initComponents() {
+
+        //Boton para regresar
+        ImageIcon imgIcon = new ImageIcon(getClass().getClassLoader().getResource(PATH_IMAGES + "/back.png"));
+        btnRegresar = new JButton(imgIcon);
+        btnRegresar.setBackground(color);
+        btnRegresar.setBorderPainted(false);
+        btnRegresar.setContentAreaFilled(false);
+        btnRegresar.setFocusPainted(false);
+        btnRegresar.setOpaque(false);
+        btnRegresar.setBounds(10, 10, 40, 33);
+        btnRegresar.addActionListener(this);
+        this.add(btnRegresar);
+
         //Creamos los componentes del Frame
         JLabel titleLabel = new JLabel("Registrarse");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
@@ -131,25 +148,28 @@ public class CrearUsuario extends JFrame implements ActionListener {
             String genero = (String) genderComboBox.getSelectedItem();
             String edad = ageField.getText();
             String telefono = phoneNumberField.getText();
-            
+
             //Generamos el codigo para el usuario
             String userCode = genCode.generadorCodigo();
             UserCodeDialog messageCode = new UserCodeDialog(this, userCode);
-            
+
             //Creamos un nuevo usuario
             Usuario user = new Usuario(nombre, apellido, edad, telefono, genero, password, userCode);
-            
+
             //Agregamos el usuario a la lista
-            
             usuarios.addUser(user);
             System.out.println(usuarios.obtenerUsuario("20240001"));
             this.dispose();
+            login.setVisible(true);
         } else if (e.getSource() == cbPassword) {
             if (cbPassword.isSelected()) {
                 passwordField.setEchoChar((char) 0);
             } else {
                 passwordField.setEchoChar('\u25CF');
             }
+        } else if (e.getSource() == btnRegresar) {
+            this.dispose();
+            login.setVisible(true);
         }
         System.out.println("===================================================");
     }

@@ -44,5 +44,7 @@ public class ListaUsuarios {
             
         }
     }
-    
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
 }

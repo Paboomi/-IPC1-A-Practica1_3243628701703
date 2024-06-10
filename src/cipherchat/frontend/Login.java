@@ -73,7 +73,7 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         passwordField.setBounds(160, 180, 260, 25);
         passwordField.addFocusListener(this);
         this.add(passwordField);
-        
+
         //Boton Ver contraseña
         cbPassword = new JCheckBox("Ver contraseña");
         cbPassword.setFont(new Font("Hack", Font.BOLD, 12));
@@ -144,7 +144,7 @@ public class Login extends JFrame implements ActionListener, FocusListener {
 
             //Accion para registrarse
         } else if (ae.getSource() == btnRegistrarse) {
-            CrearUsuario user = new CrearUsuario(genCode,usuarios);
+            CrearUsuario user = new CrearUsuario(genCode, usuarios, this);
             System.out.println("Abrir la ventana para el registro");
         }
         System.out.println("================================================");
