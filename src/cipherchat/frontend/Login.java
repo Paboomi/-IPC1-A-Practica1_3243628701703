@@ -19,15 +19,13 @@ public class Login extends JFrame implements ActionListener, FocusListener {
     private JButton btnLogin;
     private JButton btnRegistrarse;
     private JCheckBox cbPassword;
-    private String PATH_IMAGES = "trycipher/Images";
+    private String PATH_IMAGES = "cipherchat/Images";
     private Font fuenteGenerica = new Font("Hack", Font.BOLD, 16);
     private Color color = new Color(245, 240, 255);
-    private GenerarCodigo genCode;
-    private ListaUsuarios usuarios;
+    private GenerarCodigo genCode = new GenerarCodigo();
+    private ListaUsuarios usuarios = new ListaUsuarios();
 
     public Login() {
-        usuarios = new ListaUsuarios();
-        genCode = new GenerarCodigo();
         initComponents();
     }
 
@@ -39,7 +37,7 @@ public class Login extends JFrame implements ActionListener, FocusListener {
 
         // Carga la imagen
 //        ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource("/Images/login.png"));
-        ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource(PATH_IMAGES + "/login.png"));
+        ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource(PATH_IMAGES + "/login2.png"));
         // Ajusta el tama�o de la imagen (puedes cambiar los valores seg�n tus necesidades)
         Image imageDimension = imageIcon.getImage().getScaledInstance(120, 110, Image.SCALE_SMOOTH);
         // Crea un nuevo ImageIcon con la imagen ajustada
@@ -131,19 +129,21 @@ public class Login extends JFrame implements ActionListener, FocusListener {
 
             //Buscamos al usuario en la lista
             try {
-                Usuario loginUser = usuarios.obtenerUsuario(codeUser);
-                if (loginUser.getCodeUser().equals(codeUser) && loginUser.getContraseña().equals(pwd)) {
+                if (usuarios.verificarCredenciales(codeUser, pwd)) {
+                    ModuloUsuario modUser = new ModuloUsuario(usuarios);
                     System.out.println("Bienvenido al sistema");
                     this.dispose();
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
                 ErrorFindUsuario errorUser = new ErrorFindUsuario(this);
                 errorUser.mostrarDialog();
             }
 
             //Accion para registrarse
         } else if (ae.getSource() == btnRegistrarse) {
+            this.setVisible(false);
             CrearUsuario user = new CrearUsuario(genCode, usuarios, this);
             System.out.println("Abrir la ventana para el registro");
         }
@@ -169,6 +169,14 @@ public class Login extends JFrame implements ActionListener, FocusListener {
     @Override
     public void focusLost(FocusEvent e) {
 
+    }
+
+    public void setUsuarios(ListaUsuarios usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public void setGenCode(GenerarCodigo genCode) {
+        this.genCode = genCode;
     }
 
 }

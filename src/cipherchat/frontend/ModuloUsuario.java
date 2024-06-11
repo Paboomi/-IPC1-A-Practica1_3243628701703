@@ -1,5 +1,6 @@
 package cipherchat.frontend;
 
+import cipherchat.backend.ListaUsuarios;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -27,8 +28,10 @@ public class ModuloUsuario extends JFrame implements ActionListener {
     private JPanel pnlMenu;
     private Font fuenteGenerica = new Font("Hack", Font.BOLD, 16);
     private Color color = new Color(245, 240, 255);
+    private ListaUsuarios usuarios;
 
-    public ModuloUsuario() {
+    public ModuloUsuario(ListaUsuarios usuarios) {
+        this.usuarios = usuarios;
         initComponents();
     }
 
@@ -36,7 +39,7 @@ public class ModuloUsuario extends JFrame implements ActionListener {
 
         //Personalizamos la ventana
         this.setTitle("Principal");
-        this.setSize(900, 700);
+        this.setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
@@ -47,32 +50,32 @@ public class ModuloUsuario extends JFrame implements ActionListener {
         pnlMenu = new JPanel();
         pnlMenu.setLayout(flowLayout);
         pnlMenu.setBackground(Color.BLACK);
-        pnlMenu.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
+        pnlMenu.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
         //Creamos los botones del menu y sus propiedades
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
-       
+
         btnContactList = new JButton("Lista Contactos");
         btnContactList.setBackground(new Color(214, 225, 50));
         btnContactList.setFont(fuenteGenerica);
         btnContactList.setBorderPainted(false);
         btnContactList.setFocusPainted(false);
         btnContactList.setCursor(handCursor);
-        
+
         btnNotifications = new JButton("Notificaciones");
         btnNotifications.setBackground(new Color(214, 225, 50));
         btnNotifications.setFont(fuenteGenerica);
         btnNotifications.setBorderPainted(false);
         btnNotifications.setFocusPainted(false);
         btnNotifications.setCursor(handCursor);
-        
+
         btnEditProfile = new JButton("Editar Perfil");
         btnEditProfile.setBackground(new Color(214, 225, 50));
         btnEditProfile.setFont(fuenteGenerica);
         btnEditProfile.setBorderPainted(false);
         btnEditProfile.setFocusPainted(false);
         btnEditProfile.setCursor(handCursor);
-        
+
         //Agregamos las escuchas a los botones
         btnContactList.addActionListener(this);
         btnNotifications.addActionListener(this);
@@ -103,42 +106,41 @@ public class ModuloUsuario extends JFrame implements ActionListener {
     }
 
     private JPanel pnlContactList() {
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(830,550));
-        panel.setBackground(Color.WHITE);
-        panel.add(new JLabel("Este es el Panel 1"));
-        
+
+        TablaContactos tblContactos = new TablaContactos(usuarios);
+        tblContactos.setPreferredSize(new Dimension(700, 550));
+
         JPanel pnlIntermedio = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        pnlIntermedio.setPreferredSize(new Dimension(830,550));
-        pnlIntermedio.setBorder(BorderFactory.createEmptyBorder(20,30,0,0));
+        pnlIntermedio.setPreferredSize(new Dimension(930, 550));
+        pnlIntermedio.setBorder(BorderFactory.createEmptyBorder(20, 30, 0, 0));
         pnlIntermedio.setBackground(Color.BLACK);
-        pnlIntermedio.add(panel);
+        pnlIntermedio.add(tblContactos);
         return pnlIntermedio;
     }
 
     private JPanel pnlNotifications() {
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(830,550));
+        panel.setPreferredSize(new Dimension(830, 550));
         panel.setBackground(Color.WHITE);
         panel.add(new JLabel("Este es el Panel 2"));
-        
+
         JPanel pnlIntermedio = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        pnlIntermedio.setPreferredSize(new Dimension(830,550));
-        pnlIntermedio.setBorder(BorderFactory.createEmptyBorder(20,30,0,0));
+        pnlIntermedio.setPreferredSize(new Dimension(830, 550));
+        pnlIntermedio.setBorder(BorderFactory.createEmptyBorder(20, 30, 0, 0));
         pnlIntermedio.setBackground(Color.BLACK);
         pnlIntermedio.add(panel);
         return pnlIntermedio;
     }
 
     private JPanel pnlEditProfile() {
-       JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(830,550));
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(830, 550));
         panel.setBackground(Color.WHITE);
         panel.add(new JLabel("Este es el Panel 3"));
-        
+
         JPanel pnlIntermedio = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        pnlIntermedio.setPreferredSize(new Dimension(830,550));
-        pnlIntermedio.setBorder(BorderFactory.createEmptyBorder(20,30,0,0));
+        pnlIntermedio.setPreferredSize(new Dimension(830, 550));
+        pnlIntermedio.setBorder(BorderFactory.createEmptyBorder(20, 30, 0, 0));
         pnlIntermedio.setBackground(Color.BLACK);
         pnlIntermedio.add(panel);
         return pnlIntermedio;
