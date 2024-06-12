@@ -1,9 +1,13 @@
 package cipherchat.frontend;
 
 import cipherchat.backend.ListaUsuarios;
+import cipherchat.backend.Usuario;
+import cipherchat.frontend.dialog.ErrorFindUsuario;
+import cipherchat.frontend.dialog.UsuarioEncontrado;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -11,10 +15,14 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -24,13 +32,16 @@ public class ModuloUsuario extends JFrame implements ActionListener {
 
     private CardLayout cardLayout;
     private JPanel panelContenido;
-    private JButton btnContactList, btnNotifications, btnEditProfile;
+    private JButton btnContactList, btnNotifications, btnEditProfile, btnBuscar, btnAgregar;
+    private JTextField contactField;
     private JPanel pnlMenu;
     private Font fuenteGenerica = new Font("Hack", Font.BOLD, 16);
     private Color color = new Color(245, 240, 255);
     private ListaUsuarios usuarios;
+    private Usuario usuario;
 
-    public ModuloUsuario(ListaUsuarios usuarios) {
+    public ModuloUsuario(Usuario usuario, ListaUsuarios usuarios) {
+        this.usuario = usuario;
         this.usuarios = usuarios;
         initComponents();
     }
@@ -107,14 +118,91 @@ public class ModuloUsuario extends JFrame implements ActionListener {
 
     private JPanel pnlContactList() {
 
-        TablaContactos tblContactos = new TablaContactos(usuarios);
+        //Instanciamos nuestra tabla de contactos
+        TablaContactos tblContactos = new TablaContactos(usuario, usuarios);
         tblContactos.setPreferredSize(new Dimension(700, 550));
 
-        JPanel pnlIntermedio = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        //Creamos nuestro panel para almacenar los componentes
+//        JPanel pnlIntermedio = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JPanel pnlIntermedio = new JPanel(new BorderLayout());
         pnlIntermedio.setPreferredSize(new Dimension(930, 550));
         pnlIntermedio.setBorder(BorderFactory.createEmptyBorder(20, 30, 0, 0));
         pnlIntermedio.setBackground(Color.BLACK);
-        pnlIntermedio.add(tblContactos);
+
+        //Creamos los componentes para la busqueda de contactos y los personalizamos
+        JPanel pnlFindContact = new JPanel();
+        pnlFindContact.setLayout(new BoxLayout(pnlFindContact, BoxLayout.Y_AXIS));
+        pnlFindContact.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Añade márgenes alrededor del panel
+
+        JLabel lblBuscarContacto = new JLabel("Buscar Contacto");
+        lblBuscarContacto.setHorizontalAlignment(SwingConstants.CENTER);
+        lblBuscarContacto.setAlignmentX(Component.CENTER_ALIGNMENT); // Alinea al centro
+
+        contactField = new JTextField();
+        contactField.setPreferredSize(new Dimension(100, 25)); // Ancho y alto del JTextField
+        contactField.setMaximumSize(new Dimension(Integer.MAX_VALUE, contactField.getPreferredSize().height)); // Permite que el JTextField se expanda horizontalmente
+
+        btnAgregar = new JButton("Agregar Contacto");
+        btnAgregar.setAlignmentX(Component.LEFT_ALIGNMENT); // Alinea a la izquierda
+        btnAgregar.setFont(fuenteGenerica);
+        btnAgregar.setBorderPainted(false);
+        btnAgregar.setFocusPainted(false);
+        btnAgregar.setForeground(Color.BLACK);
+        btnAgregar.setBackground(new Color(214, 225, 50));
+
+        btnBuscar = new JButton("Buscar");
+        btnBuscar.setAlignmentX(Component.LEFT_ALIGNMENT); // Alinea a la izquierda
+        btnBuscar.setFont(fuenteGenerica);
+        btnAgregar.setBorderPainted(false);
+        btnAgregar.setFocusPainted(false);
+        btnBuscar.setForeground(Color.BLACK);
+        btnBuscar.setBackground(new Color(214, 225, 50));
+
+//        //Modificamos el boton buscar para saber si el usuario existe
+        btnBuscar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    String codeContact = contactField.getText();
+                    if (usuarios.existeUsuario(codeContact)) {
+                        System.out.println("usuario encontrado");
+                        Usuario contactoBuscado = usuarios.obtenerUsuario(codeContact);
+                        UsuarioEncontrado dialogEncontrado = new UsuarioEncontrado(ModuloUsuario.this, contactoBuscado);
+                    } else {
+                        ErrorFindUsuario userExist = new ErrorFindUsuario(ModuloUsuario.this);
+                        userExist.mostrarDialog();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Ha ocurrido algo");
+                }
+            }
+        });
+
+        //Modificamos el boton agregar para agregar al usuario a la tabla de contactos
+        btnAgregar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String codeContact = contactField.getText();
+                Usuario newContact = usuarios.obtenerUsuario(codeContact);
+                tblContactos.agregarContacto(newContact);
+            }
+        });
+
+        //Personalizamos la estetica del panel
+        pnlFindContact.add(lblBuscarContacto);
+        pnlFindContact.add(Box.createRigidArea(new Dimension(0, 10))); // Añade espacio vertical
+
+        pnlFindContact.add(contactField);
+        pnlFindContact.add(Box.createRigidArea(new Dimension(0, 10))); // Añade espacio vertical
+
+        pnlFindContact.add(btnBuscar);
+        pnlFindContact.add(Box.createRigidArea(new Dimension(0, 10))); // Añade espacio vertical
+
+        pnlFindContact.add(btnAgregar);
+
+        pnlIntermedio.add(tblContactos, BorderLayout.WEST);
+        pnlIntermedio.add(pnlFindContact, BorderLayout.EAST);
+
         return pnlIntermedio;
     }
 
@@ -157,5 +245,4 @@ public class ModuloUsuario extends JFrame implements ActionListener {
             cardLayout.show(panelContenido, "Editar Perfil");
         }
     }
-
 }

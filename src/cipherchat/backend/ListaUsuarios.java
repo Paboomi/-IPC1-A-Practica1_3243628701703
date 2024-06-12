@@ -48,10 +48,12 @@ public class ListaUsuarios {
 
     public boolean verificarCredenciales(String codeUser, String contraseña) {
         Usuario usuario = obtenerUsuario(codeUser);
-        if (usuario != null && usuario.getContraseña().equals(contraseña)) {
-            return true;
-        }
-        return false;
+        return usuario != null && usuario.getContraseña().equals(contraseña);
+    }
+    
+    public boolean existeUsuario(String codeUser){
+        Usuario usuario = obtenerUsuario(codeUser);
+        return usuario != null;
     }
 
     public List<Usuario> getUsuarios() {

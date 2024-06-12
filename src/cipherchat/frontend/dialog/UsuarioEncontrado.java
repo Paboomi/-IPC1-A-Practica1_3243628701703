@@ -1,5 +1,6 @@
 package cipherchat.frontend.dialog;
 
+import cipherchat.backend.Usuario;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -17,18 +19,17 @@ import javax.swing.SwingConstants;
  *
  * @author saien
  */
-public class UserCodeDialog extends JDialog {
-
-    private String codeUser;
+public class UsuarioEncontrado extends JDialog{
+    private Usuario usuario;
     private Color color = new Color(245, 240, 255);
     private Font fuenteGenerica = new Font("Hack", Font.BOLD, 18);
 
-    public UserCodeDialog(Frame parent, String codeUser) {
-        super(parent, "Sobre el desarrollador", true);
-        //Obtenemos el codigo del usuario
-        this.codeUser = codeUser;
-        setSize(400, 250);
-        setPreferredSize(new Dimension(400, 250));
+    public UsuarioEncontrado(Frame parent, Usuario usuario) {
+        super(parent, "Usuario encontrado", true);
+        //Obtenemos el usuario
+        this.usuario = usuario;
+        setSize(600, 250);
+        setPreferredSize(new Dimension(600, 250));
         setLocationRelativeTo(null);
         getContentPane().setBackground(color);
         setLayout(new BorderLayout());
@@ -57,9 +58,9 @@ public class UserCodeDialog extends JDialog {
     }
 
     public JLabel formatoMensaje() {
-        JLabel lblInfo = new JLabel("<html><font size='16'>Tu código de usuario es: " + codeUser + "</font></html>");
+        JLabel lblInfo = new JLabel("<html><font size='16'>Nombre: " + usuario.getNombre() + " " + usuario.getApellido()+"</font></html>");
         Font font = lblInfo.getFont();
-        Font nuevaFont = new Font(font.getName(), font.getStyle(), 20);
+        Font nuevaFont = new Font(font.getName(), font.getStyle(), 16);
         lblInfo.setFont(nuevaFont);
         lblInfo.setForeground(Color.BLACK);
         lblInfo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -67,4 +68,6 @@ public class UserCodeDialog extends JDialog {
         return lblInfo;
     }
 
+
+    
 }

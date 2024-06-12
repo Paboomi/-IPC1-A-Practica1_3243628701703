@@ -130,15 +130,17 @@ public class Login extends JFrame implements ActionListener, FocusListener {
             //Buscamos al usuario en la lista
             try {
                 if (usuarios.verificarCredenciales(codeUser, pwd)) {
-                    ModuloUsuario modUser = new ModuloUsuario(usuarios);
+                    Usuario usuario = usuarios.obtenerUsuario(codeUser);
+                    ModuloUsuario modUser = new ModuloUsuario(usuario, usuarios);
                     System.out.println("Bienvenido al sistema");
                     this.dispose();
+                } else {
+                    ErrorFindUsuario errorUser = new ErrorFindUsuario(this);
+                    errorUser.mostrarDialog();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                ErrorFindUsuario errorUser = new ErrorFindUsuario(this);
-                errorUser.mostrarDialog();
             }
 
             //Accion para registrarse

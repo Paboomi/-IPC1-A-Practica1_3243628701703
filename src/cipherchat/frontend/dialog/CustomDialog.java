@@ -33,6 +33,8 @@ public abstract class CustomDialog extends JDialog {
         JPanel btnPanel = new JPanel();
         JButton btnAceptar = new JButton("Aceptar");
         btnAceptar.setFont(fuenteGenerica);
+        btnAceptar.setBorderPainted(false);
+        btnAceptar.setFocusPainted(false);
         btnAceptar.setForeground(Color.BLACK);
         btnAceptar.setBackground(new Color(214, 225, 50));
         btnAceptar.addActionListener(new ActionListener() {

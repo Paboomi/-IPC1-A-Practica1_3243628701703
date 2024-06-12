@@ -1,5 +1,8 @@
 package cipherchat.backend;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Usuario {
 
     private String codeUser;
@@ -9,6 +12,7 @@ public class Usuario {
     private String telefono;
     private String contraseña;
     private String genero;
+    private List<Usuario> contactos;
 
     public Usuario(String nombre, String apellido, String edad, String telefono, String genero, String contraseña, String codeUser) {
         this.codeUser = codeUser;
@@ -18,6 +22,7 @@ public class Usuario {
         this.telefono = telefono;
         this.contraseña = contraseña;
         this.genero = genero;
+        this.contactos = new ArrayList<>();
     }
 
     @Override
@@ -31,6 +36,27 @@ public class Usuario {
                 + "telefono= " + telefono + "\n"
                 + "contraseña= " + contraseña + "\n"
                 + "genero= " + genero + "\n";
+    }
+    //Metodos para administrar contactos
+    public void addContacto(Usuario contacto) {
+        contactos.add(contacto);
+    }
+
+    public void deleteContacto(String codeUser) {
+        contactos.removeIf(contacto -> contacto.getCodeUser().equals(codeUser));
+    }
+
+    public Usuario obtenerContacto(String codeUser) {
+        try {
+            for (Usuario contacto : contactos) {
+                if (contacto.getCodeUser().equals(codeUser)) {
+                    return contacto;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getCodeUser() {
@@ -87,6 +113,10 @@ public class Usuario {
 
     public void setGenero(String genero) {
         this.genero = genero;
+    }
+
+    public List<Usuario> getContactos() {
+        return contactos;
     }
 
 }
