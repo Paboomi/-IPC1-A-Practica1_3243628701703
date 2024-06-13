@@ -1,5 +1,6 @@
-package cipherchat.frontend;
+package cipherchat;
 
+import cipherchat.frontend.Login;
 import java.awt.GraphicsEnvironment;
 import java.util.Arrays;
 
