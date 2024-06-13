@@ -219,7 +219,7 @@ public class ChatFrame extends JFrame {
                         if (isArchivoA) {
                             matrizA = leerMatriz(filePath, 3, 3);
                         } else {
-                            matrizB = leerMatriz(filePath, 3, 24);
+                            matrizB = leerMatriz(filePath, 3, 8);
                         }
 
                     }
