@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CrearUsuario extends JFrame implements ActionListener {
-    
+
     private JTextField nameField;
     private JTextField lastNameField;
     private JPasswordField passwordField;
@@ -28,17 +28,17 @@ public class CrearUsuario extends JFrame implements ActionListener {
     private GenerarCodigo genCode;
     private ListaUsuarios usuarios;
     private Login login;
-    
+
     private JButton registerButton;
-    
+
     public CrearUsuario(GenerarCodigo genCode, ListaUsuarios usuarios, Login login) {
         this.genCode = genCode;
         this.usuarios = usuarios;
         this.login = login;
         initComponents();
-        
+
     }
-    
+
     private void initComponents() {
 
         //Boton para regresar
@@ -58,30 +58,30 @@ public class CrearUsuario extends JFrame implements ActionListener {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
         titleLabel.setBounds(200, 10, 160, 30);
         this.add(titleLabel);
-        
+
         JLabel lblName = new JLabel("Nombres:");
         lblName.setBounds(50, 50, 100, 25);
         lblName.setFont(fuenteGenerica);
         this.add(lblName);
-        
+
         nameField = new JTextField();
         nameField.setBounds(170, 50, 260, 25);
         this.add(nameField);
-        
+
         JLabel lblApellido = new JLabel("Apellidos:");
         lblApellido.setBounds(50, 90, 100, 25);
         lblApellido.setFont(fuenteGenerica);
         this.add(lblApellido);
-        
+
         lastNameField = new JTextField();
         lastNameField.setBounds(170, 90, 260, 25);
         this.add(lastNameField);
-        
+
         JLabel lblPassword = new JLabel("Contraseña:");
         lblPassword.setBounds(50, 130, 120, 25);
         lblPassword.setFont(fuenteGenerica);
         this.add(lblPassword);
-        
+
         passwordField = new JPasswordField();
         passwordField.setBounds(170, 130, 260, 25);
         this.add(passwordField);
@@ -93,35 +93,35 @@ public class CrearUsuario extends JFrame implements ActionListener {
         cbPassword.setVisible(true);
         cbPassword.addActionListener(this);
         this.add(cbPassword);
-        
+
         JLabel genderLabel = new JLabel("Género:");
         genderLabel.setBounds(50, 190, 80, 25);
         genderLabel.setFont(fuenteGenerica);
         this.add(genderLabel);
-        
+
         String[] genders = {"Masculino", "Femenino"};
         genderComboBox = new JComboBox<>(genders);
         genderComboBox.setBounds(170, 190, 150, 25);
         this.add(genderComboBox);
-        
+
         JLabel lblAge = new JLabel("Edad:");
         lblAge.setBounds(50, 230, 120, 25);
         lblAge.setFont(fuenteGenerica);
         this.add(lblAge);
-        
+
         ageField = new JTextField();
         ageField.setBounds(170, 230, 260, 25);
         this.add(ageField);
-        
+
         JLabel lblNumberPhone = new JLabel("Teléfono:");
         lblNumberPhone.setBounds(50, 270, 120, 25);
         lblNumberPhone.setFont(fuenteGenerica);
         this.add(lblNumberPhone);
-        
+
         phoneNumberField = new JTextField();
         phoneNumberField.setBounds(170, 270, 260, 25);
         this.add(phoneNumberField);
-        
+
         registerButton = new JButton("Registrarse");
         registerButton.setBounds(210, 310, 150, 25);
         registerButton.setForeground(Color.BLACK);
@@ -129,7 +129,7 @@ public class CrearUsuario extends JFrame implements ActionListener {
         registerButton.setBackground(new Color(214, 225, 50));
         registerButton.addActionListener(this);
         this.add(registerButton);
-        
+
         this.setTitle("Registro");
         this.setBounds(650, 500, 450, 400);
         getContentPane().setBackground(color);
@@ -139,41 +139,80 @@ public class CrearUsuario extends JFrame implements ActionListener {
         this.setVisible(true);
         this.setLocationRelativeTo(null);
     }
-    
+
+    private boolean validarCampos() {
+        String nombre = nameField.getText();
+        String apellido = lastNameField.getText();
+        char[] pass = passwordField.getPassword();
+        String password = new String(pass);
+        String edad = ageField.getText();
+        String telefono = phoneNumberField.getText();
+
+        if (nombre.isEmpty() || apellido.isEmpty() || password.isEmpty() || edad.isEmpty() || genderComboBox.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Todos los campos obligatorios deben ser llenados.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+            JOptionPane.showMessageDialog(this, "El nombre no debe contener números ni caracteres especiales.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!apellido.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+            JOptionPane.showMessageDialog(this, "El apellido no debe contener números ni caracteres especiales.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!edad.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "La edad debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!telefono.isEmpty() && !telefono.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "El teléfono debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Registrarse")) {
-            String nombre = nameField.getText();
-            String apellido = lastNameField.getText();
-            char[] pass = passwordField.getPassword();
-            String password = new String(pass);
-            String genero = (String) genderComboBox.getSelectedItem();
-            String edad = ageField.getText();
-            String telefono = phoneNumberField.getText();
+            if (validarCampos()) {
+                String nombre = nameField.getText();
+                String apellido = lastNameField.getText();
+                char[] pass = passwordField.getPassword();
+                String password = new String(pass);
+                String genero = (String) genderComboBox.getSelectedItem();
+                String edad = ageField.getText();
+                String telefono = phoneNumberField.getText();
 
-            //Generamos el codigo para el usuario
-            String userCode = genCode.generadorCodigo();
-            UserCodeDialog messageCode = new UserCodeDialog(this, userCode);
+                //Generamos el codigo para el usuario
+                String userCode = genCode.generadorCodigo();
+                UserCodeDialog messageCode = new UserCodeDialog(this, userCode);
 
-            //Creamos un nuevo usuario
-            Usuario user = new Usuario(nombre, apellido, edad, telefono, genero, password, userCode);
+                //Creamos un nuevo usuario
+                Usuario user = new Usuario(nombre, apellido, edad, telefono, genero, password, userCode);
 
-            //Agregamos el usuario a la lista
-            usuarios.addUser(user);
-            System.out.println(usuarios.obtenerUsuario("20240001"));
-            login.setVisible(true);
-            this.dispose();
-        } else if (e.getSource() == cbPassword) {
-            if (cbPassword.isSelected()) {
-                passwordField.setEchoChar((char) 0);
-            } else {
-                passwordField.setEchoChar('\u25CF');
+                //Agregamos el usuario a la lista
+                usuarios.addUser(user);
+                System.out.println(usuarios.obtenerUsuario("20240001"));
+                login.setVisible(true);
+                this.dispose();
+            } else if (e.getSource() == cbPassword) {
+                if (cbPassword.isSelected()) {
+                    passwordField.setEchoChar((char) 0);
+                } else {
+                    passwordField.setEchoChar('\u25CF');
+                }
+            } else if (e.getSource() == btnRegresar) {
+                login.setVisible(true);
+                this.dispose();
             }
-        } else if (e.getSource() == btnRegresar) {
-            login.setVisible(true);
-            this.dispose();
+            System.out.println("===================================================");
         }
-        System.out.println("===================================================");
+
     }
-    
+
 }

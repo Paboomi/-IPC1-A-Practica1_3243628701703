@@ -81,7 +81,7 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         this.add(cbPassword);
 
         // Boton de inicio de sesion
-        btnLogin = new JButton("Iniciar Sesi�n");
+        btnLogin = new JButton("Iniciar Sesión");
         btnLogin.setBounds(275, 260, 150, 25); //Ajuste de posici�n
         btnLogin.setForeground(Color.BLACK); // Ajuste de color de letra
         btnLogin.setBackground(new Color(214, 225, 50)); // Ajuste de color de boton, con color en RGB
@@ -131,9 +131,9 @@ public class Login extends JFrame implements ActionListener, FocusListener {
             try {
                 if (usuarios.verificarCredenciales(codeUser, pwd)) {
                     Usuario usuario = usuarios.obtenerUsuario(codeUser);
-                    ModuloUsuario modUser = new ModuloUsuario(usuario, usuarios);
+                    this.setVisible(false);
+                    ModuloUsuario modUser = new ModuloUsuario(usuario, usuarios, this);
                     System.out.println("Bienvenido al sistema");
-                    this.dispose();
                 } else {
                     ErrorFindUsuario errorUser = new ErrorFindUsuario(this);
                     errorUser.mostrarDialog();

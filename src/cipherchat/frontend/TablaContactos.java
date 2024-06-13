@@ -4,12 +4,12 @@ import cipherchat.backend.ListaUsuarios;
 import cipherchat.backend.Usuario;
 import cipherchat.backend.buttons.ButtonEditor;
 import cipherchat.backend.buttons.ButtonRenderer;
+import cipherchat.frontend.dialog.ErrorFindUsuario;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import java.awt.Frame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,19 +20,17 @@ import javax.swing.table.DefaultTableModel;
  * @author saien
  */
 public class TablaContactos extends JPanel {
-//    private ListaUsuarios usuarios;
-
     private JTable table;
-    private JButton btnChat;
-    private JButton btnEliminar;
     private Usuario usuario;
     private DefaultTableModel tableModel;
     private ListaUsuarios usuarios;
     private Font fuenteGenerica = new Font("Hack", Font.BOLD, 18);
+    private ModuloUsuario modUser;
 
-    public TablaContactos(Usuario usuario, ListaUsuarios usuarios) {
+    public TablaContactos(Usuario usuario, ListaUsuarios usuarios, ModuloUsuario modUser) {
         this.usuario = usuario;
         this.usuarios = usuarios;
+        this.modUser = modUser;
         setSize(new Dimension(830, 550));
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
@@ -53,8 +51,8 @@ public class TablaContactos extends JPanel {
         try {
             for (Usuario contacto : usuario.getContactos()) {
 
-                Object[] rowData = {usuario.getCodeUser(),
-                    usuario.getNombre() + " " + usuario.getApellido(), "Chat", " Eliminar"
+                Object[] rowData = {contacto.getCodeUser(),
+                    contacto.getNombre() + " " + contacto.getApellido(), "Chat", " Eliminar"
                 };
                 tableModel.addRow(rowData);
             }
@@ -68,16 +66,10 @@ public class TablaContactos extends JPanel {
         table.setFont(new Font("Verdana", Font.ROMAN_BASELINE, 20));
 
         table.getColumn("Chat").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Chat").setCellEditor(new ButtonEditor(table, usuario));
+        table.getColumn("Chat").setCellEditor(new ButtonEditor(table, usuario, modUser));
         
         table.getColumn("Eliminar").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Eliminar").setCellEditor(new ButtonEditor(table, usuario));
-
-//        //Configuramos las columnas de la tabla
-//        table.getColumnModel().getColumn(0).setPreferredWidth(80);
-//        table.getColumnModel().getColumn(1).setPreferredWidth(100);
-//        table.getColumnModel().getColumn(2).setPreferredWidth(10);
-//        table.getColumnModel().getColumn(3).setPreferredWidth(10);
+        table.getColumn("Eliminar").setCellEditor(new ButtonEditor(table, usuario, modUser));
 
         //Creamos un ScrollPane que contendra nuestra JTable
         JScrollPane scrollPane = new JScrollPane(table);
@@ -93,23 +85,9 @@ public class TablaContactos extends JPanel {
 
     public void agregarContacto(Usuario contacto) {
 
-        // Agregar el nuevo contacto a la lista del primer usuario (ajustar según sea necesario)
+        try {
+            // Agregar el nuevo contacto a la lista del primer usuario (ajustar según sea necesario)
         usuario.addContacto(contacto);
-
-        //Creamos los botones para chat y eliminar
-        btnChat = new JButton("Chat");
-        btnChat.setFont(fuenteGenerica);
-        btnChat.setBorderPainted(false);
-        btnChat.setFocusPainted(false);
-        btnChat.setForeground(Color.BLACK);
-        btnChat.setBackground(new Color(214, 225, 50));
-
-        btnEliminar = new JButton("Eliminar");
-        btnEliminar.setFont(fuenteGenerica);
-        btnEliminar.setBorderPainted(false);
-        btnEliminar.setFocusPainted(false);
-        btnEliminar.setForeground(Color.BLACK);
-        btnEliminar.setBackground(new Color(214, 225, 50));
 
         // Actualizar la tabla
         Object[] rowData = {contacto.getCodeUser(),
@@ -117,5 +95,9 @@ public class TablaContactos extends JPanel {
             "Chat",
             "Eliminar"};
         tableModel.addRow(rowData);
+        } catch (NullPointerException e) {
+            ErrorFindUsuario error = new ErrorFindUsuario(modUser);
+        }
+        
     }
 }

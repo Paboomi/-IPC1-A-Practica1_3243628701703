@@ -32,17 +32,19 @@ public class ModuloUsuario extends JFrame implements ActionListener {
 
     private CardLayout cardLayout;
     private JPanel panelContenido;
-    private JButton btnContactList, btnNotifications, btnEditProfile, btnBuscar, btnAgregar;
+    private JButton btnContactList, btnNotifications, btnEditProfile, btnBuscar, btnAgregar, btnBack;
     private JTextField contactField;
     private JPanel pnlMenu;
     private Font fuenteGenerica = new Font("Hack", Font.BOLD, 16);
     private Color color = new Color(245, 240, 255);
     private ListaUsuarios usuarios;
     private Usuario usuario;
+    private Login login;
 
-    public ModuloUsuario(Usuario usuario, ListaUsuarios usuarios) {
+    public ModuloUsuario(Usuario usuario, ListaUsuarios usuarios, Login login) {
         this.usuario = usuario;
         this.usuarios = usuarios;
+        this.login = login;
         initComponents();
     }
 
@@ -86,13 +88,22 @@ public class ModuloUsuario extends JFrame implements ActionListener {
         btnEditProfile.setBorderPainted(false);
         btnEditProfile.setFocusPainted(false);
         btnEditProfile.setCursor(handCursor);
+        
+        btnBack = new JButton("logout");
+        btnBack.setBackground(new Color(214, 225, 50));
+        btnBack.setFont(fuenteGenerica);
+        btnBack.setBorderPainted(false);
+        btnBack.setFocusPainted(false);
+        btnBack.setCursor(handCursor);
 
         //Agregamos las escuchas a los botones
         btnContactList.addActionListener(this);
         btnNotifications.addActionListener(this);
         btnEditProfile.addActionListener(this);
+        btnBack.addActionListener(this);
 
         //Agreagamos los botones al panel del menu
+        pnlMenu.add(btnBack);
         pnlMenu.add(btnContactList);
         pnlMenu.add(btnNotifications);
         pnlMenu.add(btnEditProfile);
@@ -119,7 +130,7 @@ public class ModuloUsuario extends JFrame implements ActionListener {
     private JPanel pnlContactList() {
 
         //Instanciamos nuestra tabla de contactos
-        TablaContactos tblContactos = new TablaContactos(usuario, usuarios);
+        TablaContactos tblContactos = new TablaContactos(usuario, usuarios, this);
         tblContactos.setPreferredSize(new Dimension(700, 550));
 
         //Creamos nuestro panel para almacenar los componentes
@@ -132,6 +143,7 @@ public class ModuloUsuario extends JFrame implements ActionListener {
         //Creamos los componentes para la busqueda de contactos y los personalizamos
         JPanel pnlFindContact = new JPanel();
         pnlFindContact.setLayout(new BoxLayout(pnlFindContact, BoxLayout.Y_AXIS));
+        pnlFindContact.setBackground(color);
         pnlFindContact.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Añade márgenes alrededor del panel
 
         JLabel lblBuscarContacto = new JLabel("Buscar Contacto");
@@ -243,6 +255,9 @@ public class ModuloUsuario extends JFrame implements ActionListener {
             cardLayout.show(panelContenido, "Notificaciones");
         } else if (ae.getSource() == btnEditProfile) {
             cardLayout.show(panelContenido, "Editar Perfil");
+        }else if (ae.getSource() == btnBack){
+            login.setVisible(true);
+            this.dispose();
         }
     }
 }

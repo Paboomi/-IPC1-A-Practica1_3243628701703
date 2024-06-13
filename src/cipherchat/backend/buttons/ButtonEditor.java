@@ -2,13 +2,15 @@ package cipherchat.backend.buttons;
 
 
 import cipherchat.backend.Usuario;
+import cipherchat.backend.chats.Chat;
+import cipherchat.backend.chats.ChatController;
 import cipherchat.frontend.ChatFrame;
+import cipherchat.frontend.ModuloUsuario;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -19,10 +21,14 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
     private boolean isPushed;
     private JTable table;
     private Usuario usuario;
+    private ChatController chatController;
+    private ModuloUsuario modUser;
 
-    public ButtonEditor(JTable table, Usuario usuario) {
+    public ButtonEditor(JTable table, Usuario usuario, ModuloUsuario modUser) {
         this.table = table;
         this.usuario = usuario;
+        this.modUser = modUser;
+        this.chatController = ChatController.getInstance();
         button = new JButton();
         button.setOpaque(true);
         button.addActionListener(this);
@@ -55,10 +61,11 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
 
     private void openChat(int row) {
         String codeUser = (String) table.getValueAt(row, 0);
-        Usuario usuario = this.usuario.obtenerContacto(codeUser);
-        if (usuario != null) {
-            ChatFrame chatFrame = new ChatFrame(usuario);
-            chatFrame.setVisible(true);
+        Usuario usuarioDestinatario = this.usuario.obtenerContacto(codeUser);
+        if (usuarioDestinatario != null) {
+            modUser.setVisible(false);
+            Chat chat = chatController.getChat(usuario, usuarioDestinatario);
+            ChatFrame chatFrame = new ChatFrame(usuario, usuarioDestinatario, chat, modUser);
         }
     }
 
